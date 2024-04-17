@@ -1,0 +1,21 @@
+<!-- recipes.html -->
+<h2>
+    Meal Type:
+    </h2>
+    <form method="get" action="search">
+        <input type="text" name="" placeholder="Filter Type of Meal:" >
+        <button type="submit"> Filter </button>
+    </form>
+
+{% for recipe in recipes_data %}
+<h2> {{ recipe.title }} </h2>
+<img src= "{{ recipe.image }}" alt="{{ recipe.title }}">
+<p> Calories: {{recipe.calories}} </p>
+<p> Protein: {{recipe.protein}}</p>
+<p> Carbs: {{recipe.carbs}} </p>
+<p> Fat: {{recipe.fat}} </p>
+
+<hr>
+
+{% endfor %}
+
