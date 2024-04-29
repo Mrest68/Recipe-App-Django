@@ -1,16 +1,7 @@
 from . import forms
 
 class personGoals:
-    @staticmethod
-    def calculate_Plan(Weight, Height, Gender,Fitness_Goal, Proteinperc, Carbperc, Fatperc):
 
-
-
-        # Macroratio = 100
-
-        Proteinperc = Proteinperc // 100
-        Carbperc = Carbperc // 100
-        Fatperc = Fatperc//100
     
     @staticmethod
     def calc_calories(bmr, Activity_levels):

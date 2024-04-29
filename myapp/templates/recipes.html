@@ -1,21 +1,53 @@
 <!-- recipes.html -->
-<h2>
-    Meal Type:
-    </h2>
-    <form method="get" action="search">
-        <input type="text" name="" placeholder="Filter Type of Meal:" >
-        <button type="submit"> Filter </button>
-    </form>
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    
+</body>
+</html>
+
+<ul id ="NavBar-Recipe"> 
+    <li class="nav-options">
+        <div>
+            <h2>
+                Meal Type:
+            </h2>
+            <form method="get" action="search">
+                <input type="text" name="" placeholder="Filter Type of Meal:">
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+    </li>
+    <li class="nav-options">
+        <div>
+            <h2>
+                FitMe Diary
+            </h2>
+        </div>
+    </li>
+</ul>
+
+
+<div id="Recipes-Models">
 
 {% for recipe in recipes_data %}
 <h2> {{ recipe.title }} </h2>
 <img src= "{{ recipe.image }}" alt="{{ recipe.title }}">
 <p> Calories: {{recipe.calories}} </p>
 <p> Protein: {{recipe.protein}}</p>
-<p> Carbs: {{recipe.carbs}} </p>
 <p> Fat: {{recipe.fat}} </p>
+
+<a href="{% url 'view_recipes' recipe.id %}" class="btn btn-primary">View Recipe</a>
+
+
 
 <hr>
 
 {% endfor %}
+
+</div>
 

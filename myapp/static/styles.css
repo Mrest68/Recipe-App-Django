@@ -1,0 +1,28 @@
+ul{
+    list-style: none;
+}
+#NavBar-Recipe{
+    display: flex;
+   justify-content: center;
+   margin: auto;
+}
+.nav-options{
+    margin: 50px;
+}
+
+#Recipes-Models {
+    text-align: center; 
+
+#Recipes-Models img {
+    display: block; 
+    margin: 0 auto; 
+}
+
+#Recipes-Models h2, #Recipes-Models p {
+    text-align: center;
+}
+
+.btn {
+    display: block; 
+    margin: 10px auto; 
+

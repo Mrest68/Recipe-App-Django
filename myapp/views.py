@@ -5,6 +5,8 @@ from .apiRequest import api_Request
 from django.urls import reverse
 from .personGoals import personGoals
 from .models import Recipe
+from django.shortcuts import render, get_object_or_404
+
 
 # Create your views here.
 
@@ -15,36 +17,36 @@ def cals_permeal(Total_cals):
       return round(mealCals)
 
 
-# def Goal(new_bmr, Fitness_Goal):
-#     Total_cals = 0
+def Goal(new_bmr, Fitness_Goal):
+    Total_cals = 0
 
-#     if Fitness_Goal != None:
+    if Fitness_Goal != None:
 
-#         if Fitness_Goal == "Cutting":
-#                 Total_cals = new_bmr - 300
-#         elif Fitness_Goal == "Maintaining":
-#                 Total_cals = new_bmr
-#         elif Fitness_Goal == "Bulking":
-#                 Total_cals = new_bmr + 300
+        if Fitness_Goal == "Cutting":
+                Total_cals = new_bmr - 300
+        elif Fitness_Goal == "Maintaining":
+                Total_cals = new_bmr
+        elif Fitness_Goal == "Bulking":
+                Total_cals = new_bmr + 300
     
-#     return Total_cals
+    return Total_cals
         
             
 
-# def calc_calories(bmr, Activity_levels):
-#     fitness = {"low": (1.2 * bmr), "average": (1.55 * bmr), "high": (1.9*bmr) }
-#     new_bmr = 0
+def calc_calories(bmr, Activity_levels):
+    fitness = {"low": (1.2 * bmr), "average": (1.55 * bmr), "high": (1.9*bmr) }
+    new_bmr = 0
 
-#     if Activity_levels != None:
-#         if Activity_levels == "low":
-#             new_bmr = fitness["low"]
-#         elif Activity_levels == "average":
-#                 new_bmr = fitness["average"]
-#         elif Activity_levels == "high":
-#                 new_bmr = fitness["high"]
+    if Activity_levels != None:
+        if Activity_levels == "low":
+            new_bmr = fitness["low"]
+        elif Activity_levels == "average":
+                new_bmr = fitness["average"]
+        elif Activity_levels == "high":
+                new_bmr = fitness["high"]
 
       
-#     return new_bmr
+    return new_bmr
             
       
 
@@ -113,7 +115,7 @@ def home(request):
 
 
 
-def Recipe_Page(request  ):
+def Recipe_Page(request ):
       
       mealCals = request.session.get('mealCals', 0)
       Proteinperc = request.session.get('Proteinperc',default = 0)
@@ -129,14 +131,30 @@ def Recipe_Page(request  ):
       
       return render(request, 'recipes.html', {'recipes_data': response1})
 
-def furtherFilter(request, data_json):
+def view_recipes(request, id ):
+      api_call = api_Request()
+      apiKey = "103231bdc9cb46128b291faf018846b3"
 
-        query = request.GET.get("", '')
 
-        if query:
-            filtered = Recipe.objects.filter(title__icontains=query)
-        else:
-            filtered = Recipe.objects.none()
+      InstructionsCall,Comments = api_call.Recipe_Instructions(id, apiKey)
+      Recipe_General = get_object_or_404(Recipe, pk=id)
+
+      Recipe_General.protein = round(Recipe_General.protein)
+      Recipe_General.fat = round(Recipe_General.fat)
+
+      return render(request, 'Recipe-Instructions.html', {
+            'recipe': Recipe_General,
+            'instructions': InstructionsCall,
+            'Comments': Comments})
+
+# def furtherFilter(request, data_json):
+
+#         query = request.GET.get("", '')
+
+#         if query:
+#             filtered = Recipe.objects.filter(title__icontains=query)
+#         else:
+#             filtered = Recipe.objects.none()
 
         
-        return render(request, 'recipes/search_results.html', {'recipes':filtered})
+#         return render(request, 'recipes/search_results.html', {'recipes':filtered})
