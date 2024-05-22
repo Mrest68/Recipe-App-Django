@@ -32,8 +32,11 @@ class personGoals:
                 Total_cals = new_bmr
             elif Fitness_Goal == "Bulking":
                 Total_cals = new_bmr + 300
+        
+        TargetCals = Total_cals
+        print(Total_cals,TargetCals)
     
-        return Total_cals
+        return Total_cals,TargetCals
     @staticmethod
     def cals_permeal(Total_cals):
       

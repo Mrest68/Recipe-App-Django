@@ -1,21 +1,156 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form</title>
+    <style>
+     #UserInfoForm-Container {
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.form-row {
+    display: flex; 
+    flex-grow: 1; 
+    
+}
+
+
+.form-section {
+    margin: 10px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgb(0, 0, 0);
+    width: 50%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 50px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center-align children horizontally */
+    margin-bottom: 20px; /* Space between sections */
+}
+
+
+label{
+    text-align: center;
+}
+input[type="text"], input[type="number"] {
+    background-color:transparent;
+    border: none;
+    font-family: sans-serif;
+    width: 20%;
+    padding: 8px;
+    border-bottom: 1px solid black;
+    margin: 5px 0 20px;
+}
+
+
+#submit {
+    padding: 8px 16px; /* Smaller padding */
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 0 auto; /* Centers the button horizontally */
+    display: block; /* Ensures margin auto works correctly */
+    width: 200px;
+    height: 80px; /* Auto width based on content */
+    margin-top: 90px;
+    font-size: 30px;
+}
+#backbutton{
+    position: absolute;
+    top: 0;
+    margin-top: 20px;
+    height: 40px;
+    width: 40px;
+    
+    
+
+}
+
+#submit:hover {
+    background-color: #fbe200;
+}
+
+.error {
+    color: red;
+    font-size: 0.85em;
+}
+#General{
+    font-family: "heimat-stencil", sans-serif;
+font-weight: 300;
+text-align: center;
+font-size: 30px;
+
+}
+#Details{
+    font-family: "heimat-stencil", sans-serif;
+font-weight: 300;
+text-align: center;
+font-size: 30px;
+padding: 2px;
+
+
+}
+#Form_header{
+    text-align: center;
+    font-family: "heimat-stencil", sans-serif;
+font-weight:300;
+}
+
+
+
+    </style>
 </head>
 <body>
-    <h1 id="Form_header"> fitMe </h1>
+    
+    <div id="UserInfoForm-Container">
+        <h1 id="Form_header">A few questions to get you started...</h1>
+        <div id="backButton"> 
+            <a id="backbutton" onclick="window.history.back();"> <img id="backbutton"src="{% static 'images/back.png' %}"> </a>
+        </div>
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
 
-    <form method="post" action="{% url 'home' %}" >
-        {% csrf_token %}
-        {{ form.as_p }}
-
-       
-        <button type="submit" > Submit </button>
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-section general">
+                    <h2 id="General">General</h2>
+                    <p id="gender"> {{ form.Gender.label_tag }}{{ form.Gender }}</p>
+                    <p>{{ form.Age.label_tag }}{{ form.Age }}</p>
+                    <p>{{ form.Weight.label_tag }}{{ form.Weight }}</p>
+                    <p>{{ form.Height.label_tag }}{{ form.Height }}</p>
+                    <p>{{ form.Actvity_levels.label_tag }}{{ form.Actvity_levels }}</p>
+                </div>
+                <div class="form-section details">
+                    <h2 id="Details">Details</h2>
+                    <p>{{ form.Fitness_Goal.label_tag }}{{ form.Fitness_Goal }}</p>
+                    <p>{{ form.Proteinperc.label_tag }}{{ form.Proteinperc }}</p>
+                    <p>{{ form.Carbperc.label_tag }}{{ form.Carbperc }}</p>
+                    <p>{{ form.Fatperc.label_tag }}{{ form.Fatperc }}</p>
+                    <p> {{form.MealType.label_tag }} {{form.MealType}}</p>
+                </div>
+            </div>
+            <button type="submit" id="submit">Submit</button>
+        </form>
         
-    </form>
+    </div>
 </body>
 </html>
 

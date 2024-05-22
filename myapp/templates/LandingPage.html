@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://use.typekit.net/flt0gyn.css">
+</head>
+<body id="body">
+    <nav class="navbar">
+        <div id="socialIcons">
+            <a href="https://www.linkedin.com/in/miguel-a-restrepo-2332b828b/" target="_blank">
+                <img src="{% static 'images/linkedin.png' %}" id="linkedin">
+            </a>
+            <a href="https://github.com/Mrest68/Recipe-App-Django" target="_blank">
+                <img src="{% static 'images/social.png' %}" id="github">
+            </a>
+        </div>
+        <ul id="ListContainer">
+            <li><a href="#">Nutrition Diary</a></li>
+            <li><a href="#">Recipes</a></li>
+            <li><a href="#">About FitME</a></li>
+        </ul>
+    </nav>
+    <div id="landingpageImages">
+        <img src="{% static 'images/ant.jpg' %}" id="Ant">
+        <img src="{% static 'images/bellingham.jpg' %}" id="bellingham">
+        <div class="star1over"></div>
+        <div class="star1"></div>
+        <div class="star2"></div>
+        <div class="star2over"></div>
+        <div class="star3"></div>
+        <div class="star4"></div>
+    </div>
+    <div class="text-container">
+        <div class="content">
+            <h1>FitME</h1>
+            <p id="aboutFit">
+                A one stop shop for all your<br>
+                nutritional and fitness tracking <br>
+                needs.
+            </p>
+            <a href="UserInputForm"><button id="StartButton">START</button></a>
+        </div>
+    </div>
+</body>
+</html>

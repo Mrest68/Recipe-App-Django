@@ -1,53 +1,852 @@
-<!-- recipes.html -->
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="javascript" href="{% static 'myscripy.js' %}">
+    <link rel="stylesheet" href="https://use.typekit.net/flt0gyn.css">
+    <style>
+
+       
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100vw;
+            z-index: 1;
+        }
+        .h1-recipes {
+            font-size: 50px;
+            text-align: center;
+            color: rgb(0, 0, 0);
+            font-family: "heimat-stencil", sans-serif;
+        }
+        #recipes-section{
+            width: 100vw;
+        }
+
+        .slides {
+            display: none;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;   
+                     padding: 20px;
+
+        }
+
+        .aboutRecipe {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 170px;
+            left: 180px;
+            max-height: 700px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-family: "pinecone-mvb", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            text-align: center;
+            font-size: 4vh;
+            max-width: 700px;
+            font-style: italic;
+            letter-spacing: 2px;
+            color: rgb(0, 0, 0);
+            text-decoration-style: double;
+        }
+
+        .buttons-recipe {
+            display: flex;
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .buttons-recipe li {
+            margin: 30px;
+        }
+
+        #buttons-recipe {
+            width: 180px;
+            height: 80px;
+            background-color: rgb(0, 0, 0);
+            border: solid;
+            border-color: white;
+            color: white;
+            font-size: 15px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            transition: .3s ease-in;
+        }
+
+        #buttons-recipe:hover {
+            background-color: white;
+            color: rgb(255, 89, 0);
+            border-radius: 60%;
+            border-color: rgb(244, 244, 244);
+            border-width: 2px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .title {
+                font-size: 6vw;
+            }
+        }
+
+        #calories {
+            font-size: 25px;
+            position: absolute;
+            top: 150px;
+            right: 520px;
+            font-family: "pinecone-mvb", sans-serif;
+            font-weight: 100;
+
+        }
+
+        .nutrition-recipe {
+            display: flex;
+            list-style: none;
+        }
+
+        .nutrition-recipe li {
+            margin: 40px;
+            word-spacing: 5px;
+            font-size: 25px;
+            font-family: sans-serif;
+            text-align: center;
+            border-width: 1px;
+            border-radius: 60px;
+            width: 100px;
+            padding: 5px;
+            height: 110px;
+            box-shadow: 0 4px 8px rgb(0, 0, 0);
+        }
+
+        .active {
+            display: block;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+            font-size: 80px;
+            transition: 0.3s ease;
+            user-select: none;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .prev {
+            left: 30px;
+        }
+
+        .next {
+            right: 30px;
+        }
+
+        .prev:hover, .next:hover {
+            color: #ffee00;
+        }
+
+        
+
+        #recipe-image {
+            width: 370px;
+            height: 370px;
+            position: absolute;
+            bottom: 350px;
+            right: 420px;
+            justify-content: center;
+            border: none;
+            z-index: 1;
+            box-shadow: 0 4px 8px rgb(0, 0, 0);
+        }
+
+        .imagebackground {
+            width: 370px;
+            height: 370px;
+            bottom: 330px;
+            position: absolute;
+            right: 430px;
+            background-color: #829782;
+            border: none;
+            z-index: 0;
+        }
+
+        #ListContainer {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            color: #000000;
+            margin-top: 30px;
+            font-size: larger;
+            transition-duration: 3s;
+            cursor: pointer;
+        }
+
+        #ListContainer li {
+            display: inline-block;
+            margin-right: 60px;
+            padding-right: 30px;
+            margin-top: 5px;
+            font-family: sans-serif;
+            font-weight: 100;
+            font-style: normal;
+        }
+
+        #ListContainer li a {
+            text-decoration: none;
+            text-transform: capitalize;
+            color: black;
+            position: relative;
+        }
+
+        #ListContainer li a::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #000000;
+            transition: width 0.3s;
+        }
+
+        #ListContainer li a:hover::before {
+            width: 100%;
+        }
+
+        #socialIcons {
+            position: absolute;
+            top: 0;
+            margin-top: 10px;
+        }
+
+        #github {
+            height: 40px;
+            width: 40px;
+            margin-left: 50px;
+            transform: .5s;
+        }
+        #github:hover{
+            transform: scale(120%);
+
+        }
+
+        #linkedin {
+            height: 40px;
+            width: 40px;
+            transform: .3s;
+        }
+        #linkedin:hover{
+            transform: scale(120%);
+
+
+        }
+
+        .fitmepage {
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+        }
+
+        #kettle {
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+        }
+
+        #fitmepage {
+            transition: transform .5s;
+            perspective: 1000px;
+        }
+
+        #fitmepage:hover {
+            transform: rotateX(180deg);
+        }
+
+        #recipes-section {
+            height: 100vh;
+        }
+
+        #fitness-Diary {
+            height: 100vh;
+            display: flex;
+            flex-direction: row; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            position: relative; 
+        }
+
+        #fitness-Diary-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+            height: 100vh;
+            background-image: url("{% static 'images/chris.png' %}"); 
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat;
+        }
+        #macroRow{
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            list-style: none;
+            bottom: 50px;
+            left: 43%;
+
+
+            
+        }
+        #macroRow li{
+         margin: 40px;
+            word-spacing: 5px;
+            font-size: 25px;
+            font-family: sans-serif;
+            text-align: center;
+            border-width: 1px;
+            border-radius: 60px;
+            width: 100px;
+            padding: 5px;
+            height: 110px;
+            box-shadow: 0 4px 8px rgb(0, 0, 0);
+            border-color: #6eff4e;
+            border-width: 3px;
+            border-style: solid;
+            color: #3e3e3e;
+}
+#MacrosPHeader{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 20px;
+    
+    
+}
+        #macroCounter{
+            display: flex;
+            
+        }
+       #adjustCals {
+            margin-left: 30px;
+        }
+        
+        #meal_form_container {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            background-color: rgba(255, 255, 255, 0.916);
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            
+        }
+       
+
+        #fitness-Diary-h1 {
+            transform: rotate(-90deg);
+            white-space: nowrap; 
+            position: absolute; 
+            left: 20%;
+            top: 30%; 
+            font-size: 130px; 
+            color: rgba(255, 255, 255, 0.562); 
+            z-index: 1; 
+        }
+
+     
+        #totalCals{
+            color: rgb(0, 0, 0);
+            margin: 0;
+            font-family: "pinecone-mvb", sans-serif;
+            font-size: 25px;
+            width: 100%;
+            -webkit-font-smoothing: antialiased;
+            font-family: "heimat-stencil", sans-serif;
+
+        }
+
+        #max_cals {
+            color: rgb(0, 0, 0);
+            font-size: 25px;
+            
+
+        }
+
+
+
+        
+
+        #meals_list {
+            margin-top: 10px;
+            max-height: 30%;
+            width: 60%; 
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px; 
+            overflow-y: auto; 
+            border: 1px solid #dddddd;
+            padding: 10px;
+            box-shadow: 0 4px 8px #0000001a;
+            border-radius: 20px;
+            background-color: white;
+            text-align: center;
+        }
+
+        .meal {
+            border-bottom: 1px solid #0000001a;
+            padding: 15px;
+        }
+
+        .meal h4 {
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .meal p {
+            margin: 5px 0;
+        }
+
+        .meal:last-child {
+            border-bottom: none;
+        }
+
+        #meal_form {
+            background-color: white;
+            border-radius: 10px;
+            height: 60%;
+            -webkit-font-smoothing: antialiased;
+            width: 60%;
+
+        }
+
+        #meal_form p {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left; 
+            margin-bottom: 15px; }
+
+        #meal_form label {
+            margin-bottom: 5px; 
+        }
+
+        #meal_form input {
+            padding: 10px; 
+            box-sizing: border-box; 
+            width: 50%;
+            border-radius: 25px;
+            border-color: #939393;
+            border-width: 1px;
+            border-style: solid;
+            
+        }
+
+        #meal_form button {
+            background-color: rgb(248, 93, 93);
+            border: none;
+            color: white;
+            width: 100px;
+            height: 50px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;            
+            margin: 40px auto 0 auto; 
+
+        }
+
+        #meal_form button:hover {
+            background-color: rgb(255, 89, 0);
+        }
+        @keyframes flashRed {
+    0% {
+        color: black;
+    }
+    50% {
+        color: red;
+    }
+    100% {
+        color: black;
+    }
+}
+
+@keyframes flashGreen {
+    0% {
+        color: black;
+    }
+    50% {
+        color: green;
+    }
+    100% {
+        color: black;
+    }
+}
+
+.flash-red {
+    animation: flashRed 0.5s;
+}
+
+.flash-green {
+    animation: flashGreen 0.5s;
+}
+
+    </style>
 </head>
 
 <body>
+    <section id="recipes-section">
+        <div class="navbar">
+
+        </div>
+        <p class="h1-recipes">Recipes</p>
+
+        <div id="socialIcons">
+            <a href="https://www.linkedin.com/in/miguel-a-restrepo-2332b828b/" target="_blank"> <img src="{% static 'images/linkedin.png' %}" id="linkedin"></a>
+            <a href="https://github.com/Mrest68/Recipe-App-Django" target="_blank"><img src="{% static 'images/social.png' %}" id="github"></a>
+        </div>
+        <ul id="ListContainer">
+            <li><a href="{% url 'LandingPage' %}">Home</a></li>
+            <li><a href="{% url 'userinputform' %}">About FitME</a></li>
+        </ul>
+
+        <div class="container">
+            {% for recipe in recipes_data %}
+            <div class="slides">
+                <div class="aboutRecipe">
+                    <div class="title-background"></div>
+                    <h2 class="title">{{ recipe.RecipeName|linebreaksbr }}</h2>
+                    <ul class="nutrition-recipe">
+                        <div class="macros-background"></div>
+                        <li><p id="protein">Protein <br>{{ recipe.Protein }}</p></li>
+                        <div class="macros-background"></div>
+                        <li><p id="fat">Fat <br>{{ recipe.Fat }}</p></li>
+                        <div class="macros-background"></div>
+                        <li><p id="carbs">Carbs <br>{{ recipe.Carbs }}</p></li>
+                    </ul>
+                    <ul class="buttons-recipe">
+                        <li><a href="{{recipe.RecipeLink}}" target="_blank"><button id="buttons-recipe">Recipe Instructions</button></a></li>
+                        <li><a href=" morerecipes"><button id="buttons-recipe">More Recipes</button></a></li>
+                    </ul>
+                </div>
+                <div class="imagebackground"></div>
+                <img id="recipe-image" src="{{ recipe.recipeImage }}" alt="{{ recipe.title }}">
+                <p id="calories">Calories: {{ recipe.Calories }}</p>
+            </div>
+            {% endfor %}
+
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+        </div>
+
+        <div class="fitmepage" id="fitmepage">
+            <a href="#fitness-Diary"><img id="kettle" src="{% static 'images/kettlebell.png' %}"></a>
+        </div>
+    </section>
+
+    <section id="fitness-Diary">
+        <h1 id="fitness-Diary-h1">Fitness Diary</h1>
+
+        <div id="fitness-Diary-container">
+            <ul id="macroRow">
+                
+           
+                <li><p id="MacrosPHeader">Calories</p><p id="max_cals">{{ MaxCals }}</p></li>
+                <li><p id="MacrosPHeader">Protein</p><p id="max_protein">{{TargetProtein}}</p></li>
+                <li><p id="MacrosPHeader">Carbs</p><p id="max_carbs" >{{TargetCarbs}}</p></li>
+                <li><p id="MacrosPHeader">Fat</p><p id="max_fat">{{TargetFat}}</p></li>
+
+
+
+            </ul>
+        </ul>
+            </div>
+        </div>
+
+
+        
+        <div id="meal_form_container">
+            <div id="meals_list">
+                {% for meal in meals %}
+                <div class="meal" id="meal_{{ meal.id }}">
+                    <h4>{{ meal.MealName }}</h4>
+                    <p>Calories {{ meal.Calories }}</p>
+                    <p>Protein {{ meal.Protein }}g</p>
+                    <p>Fat {{ meal.Fat }}g</p>
+                    <p>Carbse {{ meal.Carbs }}g</p>
+                    <button class="delete-meal-btn" data-meal-id="{{ meal.id }}" data-meal-calories="{{ meal.Calories }}">Delete Meal</button>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <form id="meal_form" method="post" action="{% url 'addMeal' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button id="add_meal_button">Add Meal</button>
+
+            </form>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let slideIndex = 0;
+        showSlides(slideIndex);
+    
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+    
+        function showSlides(n) {
+            let slides = document.getElementsByClassName("slides");
+            if (n >= slides.length) { slideIndex = 0; }
+            if (n < 0) { slideIndex = slides.length - 1; }
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex].style.display = "block";
+        }
+    
+        const changeColor = (element, colorClass) => {
+            element.classList.remove('flash-red', 'flash-green');
+            void element.offsetWidth; // Trigger reflow to restart the animation
+            element.classList.add(colorClass);
+        }
+    
+        const getCSRFToken = () => {
+            var name = 'csrftoken';
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    
+        const updateMacroElement = (element, initialValue, changeValue) => {
+            let currentValue = parseInt(element.data('current-value'), 10);
+            let newValue = currentValue - changeValue;
+            let displayValue;
+            if (newValue === 0) {
+                displayValue = "100%";
+            } else if (newValue < 0) {
+                displayValue = `${Math.abs(newValue / initialValue * 100).toFixed(0)}%`;
+            } else {
+                displayValue = newValue;
+            }
+            if (isNaN(displayValue)) displayValue = "0";
+            element.text(displayValue);
+            element.data('current-value', newValue); // Update the current value
+            return newValue;
+        }
+    
+        const restoreMacroElement = (element, initialValue, changeValue) => {
+            let currentValue = parseInt(element.data('current-value'), 10);
+            let newValue = currentValue + changeValue;
+            let displayValue;
+            if (newValue === 0) {
+                displayValue = "100%";
+            } else if (newValue < 0) {
+                displayValue = `${Math.abs(newValue / initialValue * 100).toFixed(0)}%`;
+            } else {
+                displayValue = newValue;
+            }
+            if (isNaN(displayValue)) displayValue = "0";
+            element.text(displayValue);
+            element.data('current-value', newValue); // Update the current value
+            return newValue;
+        }
+    
+        const updateValues = (calories, protein, fat, carbs) => {
+            let maxCalsElement = $('#max_cals');
+            let maxProteinElement = $('#max_protein');
+            let maxFatElement = $('#max_fat');
+            let maxCarbsElement = $('#max_carbs');
+    
+            let initialMaxProtein = parseInt(maxProteinElement.data('initial-value'), 10);
+            let initialMaxFat = parseInt(maxFatElement.data('initial-value'), 10);
+            let initialMaxCarbs = parseInt(maxCarbsElement.data('initial-value'), 10);
+    
+            let currentMaxCals = parseInt(maxCalsElement.text(), 10);
+            let currentMaxProtein = parseInt(maxProteinElement.data('current-value'), 10);
+            let currentMaxFat = parseInt(maxFatElement.data('current-value'), 10);
+            let currentMaxCarbs = parseInt(maxCarbsElement.data('current-value'), 10);
+    
+            maxCalsElement.text(currentMaxCals - calories);
+    
+            currentMaxProtein = updateMacroElement(maxProteinElement, initialMaxProtein, protein);
+            currentMaxFat = updateMacroElement(maxFatElement, initialMaxFat, fat);
+            currentMaxCarbs = updateMacroElement(maxCarbsElement, initialMaxCarbs, carbs);
+    
+            changeColor(maxCalsElement[0], 'flash-red');
+            changeColor(maxProteinElement[0], 'flash-red');
+            changeColor(maxFatElement[0], 'flash-red');
+            changeColor(maxCarbsElement[0], 'flash-red');
+        }
+    
+        const restoreValues = (calories, protein, fat, carbs) => {
+            let maxCalsElement = $('#max_cals');
+            let maxProteinElement = $('#max_protein');
+            let maxFatElement = $('#max_fat');
+            let maxCarbsElement = $('#max_carbs');
+    
+            let initialMaxProtein = parseInt(maxProteinElement.data('initial-value'), 10);
+            let initialMaxFat = parseInt(maxFatElement.data('initial-value'), 10);
+            let initialMaxCarbs = parseInt(maxCarbsElement.data('initial-value'), 10);
+    
+            let currentMaxCals = parseInt(maxCalsElement.text(), 10);
+            let currentMaxProtein = parseInt(maxProteinElement.data('current-value'), 10);
+            let currentMaxFat = parseInt(maxFatElement.data('current-value'), 10);
+            let currentMaxCarbs = parseInt(maxCarbsElement.data('current-value'), 10);
+    
+            maxCalsElement.text(currentMaxCals + calories);
+    
+            currentMaxProtein = restoreMacroElement(maxProteinElement, initialMaxProtein, protein);
+            currentMaxFat = restoreMacroElement(maxFatElement, initialMaxFat, fat);
+            currentMaxCarbs = restoreMacroElement(maxCarbsElement, initialMaxCarbs, carbs);
+    
+            changeColor(maxCalsElement[0], 'flash-green');
+            changeColor(maxProteinElement[0], 'flash-green');
+            changeColor(maxFatElement[0], 'flash-green');
+            changeColor(maxCarbsElement[0], 'flash-green');
+        }
+    
+        $(document).ready(function() {
+            $('#max_protein').data('initial-value', $('#max_protein').text());
+            $('#max_fat').data('initial-value', $('#max_fat').text());
+            $('#max_carbs').data('initial-value', $('#max_carbs').text());
+    
+            $('#max_protein').data('current-value', $('#max_protein').text());
+            $('#max_fat').data('current-value', $('#max_fat').text());
+            $('#max_carbs').data('current-value', $('#max_carbs').text());
+    
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", getCSRFToken());
+                    }
+                }
+            });
+    
+            $('#add_meal_button').click(function(event) {
+                event.preventDefault();
+                var form = $('#meal_form');
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.status !== 'error') {
+                            $('#meals_list').append(
+                                '<div class="meal" id="meal_' + response.id + '"><h4>' + response.name + '</h4>' +
+                                '<p>Calories: ' + response.calories + '</p>' +
+                                '<p>Protein: ' + response.protein + 'g</p>' +
+                                '<p>Fat: ' + response.fat + 'g</p>' +
+                                '<p>Carbs: ' + response.carbs + 'g</p>' +
+                                '<button class="delete-meal-btn" data-meal-id="' + response.id + '" data-meal-calories="' + response.calories + '" data-meal-protein="' + response.protein + '" data-meal-fat="' + response.fat + '" data-meal-carbs="' + response.carbs + '">Delete Meal</button></div>'
+                            );
+    
+                            updateValues(
+                                parseInt(response.calories, 10), 
+                                parseInt(response.protein, 10), 
+                                parseInt(response.fat, 10), 
+                                parseInt(response.carbs, 10)
+                            );
+    
+                            $('#meal_form')[0].reset(); // Reset the form
+                        } else {
+                            console.log("Error:", response.errors);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log("Unsuccessful", xhr.responseText);
+                    }
+                });
+            });
+    
+            $('#meals_list').on('click', '.delete-meal-btn', function() {
+                var mealId = $(this).data('meal-id');
+                var mealCalories = parseInt($(this).data('meal-calories'), 10);
+                var mealProtein = parseInt($(this).data('meal-protein'), 10);
+                var mealFat = parseInt($(this).data('meal-fat'), 10);
+                var mealCarbs = parseInt($(this).data('meal-carbs'), 10);
+                $.ajax({
+                    type: 'POST',
+                    url: '/delete_meal/' + mealId + '/',
+                    headers: {
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#meal_' + mealId).remove();
+                            restoreValues(mealCalories, mealProtein, mealFat, mealCarbs);
+                            alert('Meal deleted successfully.');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('Error: Meal could not be deleted.');
+                    }
+                });
+            });
+        });
+    
+        document.getElementById('kettle').addEventListener('click', function(e) {
+            e.preventDefault(); 
+            let targetPosition = document.querySelector('#fitness-Diary').offsetTop;
+            let startPosition = window.pageYOffset;
+            let distance = targetPosition - startPosition;
+            let duration = 1500; 
+            let startTime = null;
+    
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                let timeElapsed = currentTime - startTime;
+                let run = ease(timeElapsed, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+    
+            function ease(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+    
+            requestAnimationFrame(animation);
+        });
+    </script>
+    
+    
+
+    
+    
     
 </body>
 </html>
-
-<ul id ="NavBar-Recipe"> 
-    <li class="nav-options">
-        <div>
-            <h2>
-                Meal Type:
-            </h2>
-            <form method="get" action="search">
-                <input type="text" name="" placeholder="Filter Type of Meal:">
-                <button type="submit">Filter</button>
-            </form>
-        </div>
-    </li>
-    <li class="nav-options">
-        <div>
-            <h2>
-                FitMe Diary
-            </h2>
-        </div>
-    </li>
-</ul>
-
-
-<div id="Recipes-Models">
-
-{% for recipe in recipes_data %}
-<h2> {{ recipe.title }} </h2>
-<img src= "{{ recipe.image }}" alt="{{ recipe.title }}">
-<p> Calories: {{recipe.calories}} </p>
-<p> Protein: {{recipe.protein}}</p>
-<p> Fat: {{recipe.fat}} </p>
-
-<a href="{% url 'view_recipes' recipe.id %}" class="btn btn-primary">View Recipe</a>
-
-
-
-<hr>
-
-{% endfor %}
-
-</div>
-
+}\

@@ -1,4 +1,4 @@
-#!/Users/miguelrestrepo/Desktop/DjangoProject/venv/bin/python3
+#!/Users/miguelrestrepo/Desktop/DjangoProject/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

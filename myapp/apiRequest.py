@@ -1,27 +1,30 @@
 import requests
 from .models import Recipe
 
-apiKey = "103231bdc9cb46128b291faf018846b3"
 
 class api_Request:
+   
         
 
-    def main(self, mealCals, Proteinperc, Fatperc, Carbperc):
+    def main(self, mealCals, Proteinperc, Fatperc, Carbperc,MealType):
         
 
-        URL = "https://api.spoonacular.com/recipes/complexSearch?apiKey="
+        URL = "https://api.edamam.com/api/recipes/v2?type=public&app_id=e4b6e46c&app_key=1c35e3fec76ac6871529fc903c94ca11"
+
+
         min_cals = mealCals - 200
         max_cals = mealCals + 100
        
-        minProtein = (float(mealCals) * float(Proteinperc)/100 ) /4
-        minCarb = (float(mealCals) * float(Carbperc)/100) / 4
-        minFat = (float(mealCals) * float(Fatperc) / 100) / 9 
-       
+        minProtein = round((float(mealCals) * float(Proteinperc)/100 ) /4)
+        minCarb = round((float(mealCals) * float(Carbperc)/100) / 4)
+        minFat = round((float(mealCals) * float(Fatperc) / 100) / 9 )
 
        
         try:
-              response = requests.get(f"{URL}{apiKey}&minCalories={min_cals}&maxCalories={max_cals}&minProtein={minProtein}&minCarb={minCarb}&minFat={minFat}")
-              print(minProtein,minCarb,minFat)
+
+              url = f"{URL}&mealType={MealType}&calories={min_cals}-{max_cals}&nutrients[PROCNT]={minProtein}&nutrients[CHOCDF]={minCarb}&nutrients[FAT]={minFat}"
+              response = requests.get(url)
+              print(url)
               response.raise_for_status()
               recipes_data = response.json()
         
@@ -37,28 +40,58 @@ class api_Request:
     # Deciphers the json returned from the apiRequest to Spooncular to display the options for the USER
     def decipher_json(self, recipes_data):
        
-        recipes_list = recipes_data.get('results', [])
+        hits = recipes_data.get('hits', [])
+        recipeChecker = set()
         data_json = []
 
-        for data in recipes_list:
-            nutrients_list = data.get('nutrition' , {}).get('nutrients', [])
-            nutrients = {nutrient['name']: nutrient['amount'] for nutrient in nutrients_list}
-            
+        for data in hits:
+                recipe_info = data.get('recipe',{}).get('calories')
+                if recipe_info not in recipeChecker:
+                    recipeChecker.add(recipe_info)
+                     
+                    recipe_data = data.get('recipe', {})
+
+                    recipeImage = recipe_data.get('image', '')
+                
+                    RecipeName = recipe_data.get('label', '')
+
+                    HealthLabels = recipe_data.get('healthLabels', [])
+                    Calories = recipe_data.get('calories', 0)
+                    Digest = recipe_data.get('digest', [])
+                    RecipeLink = recipe_data.get('url', '')
+
+                    Fat = 0
+                    Carbs = 0
+                    Protein = 0
+                    for nutrient in Digest:
+
+                        if nutrient['label'] == 'Fat':
+                            Fat = nutrient.get('total', 0)
+
+                        if nutrient['label'] == 'Carbs':
+                            Carbs = nutrient.get('total', 0)
+                            
+                        if nutrient['label'] == 'Protein':
+                            Protein = nutrient.get('total', 0)
+                    
 
 
-            recipe = Recipe(
+                    recipe = Recipe(
 
-                title = data.get("title"),
-                image = data.get("image"),
-                calories = round(nutrients.get("Calories")),
-                protein = round(nutrients.get("Protein")),
-                fat = round(nutrients.get("Fat")),
-                id = data.get("id")
+                            RecipeName = RecipeName,
+                            recipeImage = recipeImage,
+                            Calories = round(Calories),
+                            HealthLabels = HealthLabels,
+                            Protein = round(Protein),
+                            Fat = round(Fat),
+                            Carbs = round(Carbs),
+                            RecipeLink = RecipeLink
+                        )
 
-            )
-           
-
-            data_json.append(recipe)
+                
+                    data_json.append(recipe)
+                else:
+                     continue
 
         Recipe.objects.bulk_create(data_json, ignore_conflicts=True)
 
@@ -66,72 +99,11 @@ class api_Request:
     
     
        
-    #Calls Spooncular with a request to return the recipe instructions of the recipe selected by the user
-    def Recipe_Instructions(self, id, apiKey): #id, apiKey
-        
-        Recipe_Instructions_URL = (f"https://api.spoonacular.com/recipes/{id}/analyzedInstructions?apiKey={apiKey}")
+  
+  
 
 
-        try:
-            Recipe_response = requests.get(Recipe_Instructions_URL)
-            Recipe_json = Recipe_response.json()
-        except requests.exceptions as e:
-            print(f"There was an error retrieving the Recipe Instructions {e}")
-
-        Deciphered_Recipe = self.decipher_json_RecipeInstructions(Recipe_json)
-        return Deciphered_Recipe
-
-
-
-
-    #Deciphers the json returned by the Spooncular with the Recipe Instructions
-    def decipher_json_RecipeInstructions(self, Recipe_json):
-        Recipe_data = []
-        comments = ""
-        seen_ingredients = set()
-
-        for recipe in Recipe_json:
-            for step in recipe['steps']:
-                
-                ingredients_list = step.get('ingredients', [])
-                ingredients = []
-
-                for ingredient in ingredients_list:
-                    if ingredient['name'] not in seen_ingredients:
-                        seen_ingredients.add(ingredient['name'])
-                        ingredients.append ({
-                        'name': ingredient['name'],
-                        'image': ingredient.get('image', 'No image available')
-                        } )
-
-                equipment = ', '.join([equipment['name'] for equipment in step.get('equipment', [])])
-
-                theStep = step['step']
-
-
-                #isolate and assign the step and comments that may come with the steps
-                if "Comments:" in theStep:
-                    mainStep, comments = theStep.split('Comments:', 1) # the one represents "maxsplit()"" which is an argument for the max amount of times it should be split
-                    theStep = mainStep.strip() # strip gets rid of any spaces or trailing characters which cleans up the text
-                else:
-                    theStep = step['step']
-
-                if not equipment:
-                    equipment = ""
-
-                step_detail = {
-                "number": step['number'],
-                "step":theStep,
-                "ingredients":ingredients, #', '.join([ingredient['name'] for ingredient in step.get('ingredients', [])]),
-                "equipment": equipment,
-                
-
-            }
-                Recipe_data.append(step_detail)
-
-        print("these are the seen ingredients", seen_ingredients)
-        return Recipe_data, comments.strip()
-
+   
 
 
 
